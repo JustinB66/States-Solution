@@ -1,22 +1,45 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "States Project", "States Project\States Project.vbproj", "{25D8BB11-C83E-4CF3-82D2-BCDD024B5320}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{25D8BB11-C83E-4CF3-82D2-BCDD024B5320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25D8BB11-C83E-4CF3-82D2-BCDD024B5320}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25D8BB11-C83E-4CF3-82D2-BCDD024B5320}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25D8BB11-C83E-4CF3-82D2-BCDD024B5320}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-EndGlobal
+' Name:         States Project
+' Purpose:      Sort the contents of a file and then save to the file.
+' Programmer:   Justin Blair on 12-8-21
+
+Option Explicit On
+Option Strict On
+Option Infer Off
+
+Public Class frmMain
+   Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
+        Me.Close()
+    End Sub
+
+    Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles Me.Load
+        ' Add file's contents to a list box.
+
+        Dim inFile As IO.StreamReader
+
+        If IO.File.Exists("states.txt") Then
+            inFile = IO.File.OpenText("states.txt")
+            Do Until inFile.Peek = -1
+                lstStates.Items.Add(inFile.ReadLine)
+            Loop
+            inFile.Close()
+        Else
+            MessageBox.Show("Cannot find the file.", "States",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+    End Sub
+
+    Private Sub btnWrite_Click(sender As Object, e As EventArgs) Handles btnWrite.Click
+        ' Write the sorted contents of the list box to a file.
+
+        Dim outFile As IO.StreamWriter
+
+        outFile = IO.File.CreateText("states.txt")
+        For intIndex As Integer = 0 To lstStates.Items.Count - 1
+            outFile.WriteLine(lstStates.Items(intIndex))
+        Next intIndex
+        outFile.Close()
+        MessageBox.Show("File written successfully.", "States",
+                          MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+    End Sub
+End Class
